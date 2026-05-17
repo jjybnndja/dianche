@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电车账目 - 年终结算</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", -apple-system, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: #fff;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 22px; font-weight: 700; }
+        .header .sub { font-size: 13px; opacity: .8; margin-top: 4px; }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .card {
+            flex: 1;
+            min-width: 160px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px 18px;
+            border-left: 5px solid #1a73e8;
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+        .card .lbl { font-size: 12px; color: #999; }
+        .card .val { font-size: 24px; font-weight: 700; color: #222; margin-top: 4px; }
+        .card.green { border-left-color: #34a853; }
+        .card.orange { border-left-color: #fbbc04; }
+        .card.red { border-left-color: #ea4335; }
+
+        .section { margin-bottom: 16px; }
+        .section h2 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a73e8;
+            background: #e8f0fe;
+            padding: 8px 14px;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            font-size: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+        }
+        th, td {
+            padding: 7px 12px;
+            text-align: center;
+            border: 1px solid #d0d0d0;
+        }
+        th {
+            background: #f0f4f8;
+            font-weight: 600;
+            color: #444;
+        }
+        td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: #333;
+            background: #fafafa;
+            white-space: nowrap;
+        }
+        td.total-col { font-weight: 700; color: #1a73e8; }
+        tr.total td { background: #e8f0fe !important; font-weight: 700; }
+        td.zero { color: #bbb; }
+        td.num { font-family: "Courier New", monospace; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            table { font-size: 12px; }
+            th, td { padding: 5px 6px; }
+            .card .val { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="root"></div>
+<script>
+var PAGE_DATA = {
+  "update_time": "2026-05-17 12:37:14",
+  "cars": [
+    "1910D",
+    "5615D",
+    "5650D",
+    "6159D",
+    "9569D"
+  ],
+  "total_expenses": {
+    "去年十一月": {
+      "1910D": 24039.68,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "去年十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "三月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "四月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "五月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "六月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "七月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "八月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "九月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    }
+  },
+  "total_profit": {
+    "去年十一月": {
+      "1910D": 17806.57,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "去年十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "三月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "四月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "五月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "六月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "七月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "八月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "九月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    }
+  },
+  "total_electricity": {
+    "去年十一月": {
+      "1910D": 7158.26,
+      "5615D": 2689.76,
+      "5650D": 4615.64,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "去年十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "三月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "四月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "五月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "六月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "七月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "八月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "九月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    }
+  },
+  "unsettled_freight": {
+    "去年十一月": {
+      "1910D": 5672.49,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "去年十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "三月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "四月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "五月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "六月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "七月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "八月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "九月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十一月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    },
+    "十二月": {
+      "1910D": 0.0,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 0.0
+    }
+  },
+  "summaries": {
+    "all_cars_total_expense": 24039.68,
+    "all_cars_total_profit": 17806.57,
+    "all_cars_total_electricity": 14463.66,
+    "all_cars_unsettled_freight": 5672.49
+  },
+  "total_row": {
+    "total_expenses": {
+      "1910D": 24039.68,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 24039.68
+    },
+    "total_profit": {
+      "1910D": 17806.57,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 17806.57
+    },
+    "total_electricity": {
+      "1910D": 7158.26,
+      "5615D": 2689.76,
+      "5650D": 4615.64,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 14463.66
+    },
+    "unsettled_freight": {
+      "1910D": 5672.49,
+      "5615D": 0.0,
+      "5650D": 0.0,
+      "6159D": 0.0,
+      "9569D": 0.0,
+      "合计": 5672.49
+    }
+  }
+};
+// 上传工具会自动将 JSON 数据替换到此占位符位置
+
+var PAGE_DATA = null;
+
+async function init() {
+  // 先尝试内嵌数据
+  if (PAGE_DATA && PAGE_DATA.cars) {
+    render(PAGE_DATA);
+    return;
+  }
+  // 如果内嵌数据不存在，尝试远程加载 data.json
+  try {
+    var r = await fetch('data.json?t=' + Date.now());
+    if (r.ok) {
+      var d = await r.json();
+      render(d);
+      return;
+    }
+  } catch(e) {}
+  document.getElementById('root').innerHTML = '<p style="padding:40px;text-align:center;color:#999;">数据加载失败</p>';
+}
+
+function fmt(v) {
+  if (v === null || v === undefined || v === '') return '-';
+  var n = typeof v === 'number' ? v : parseFloat(v);
+  if (isNaN(n)) return '-';
+  return n.toFixed(2);
+}
+
+function render(d) {
+  var cars = d.cars || [];
+  var s = d.summaries || {};
+  var months = ["去年十一月","去年十二月","一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+  var sections = [
+    {t:"总费用", k:"total_expenses"},
+    {t:"总利润", k:"total_profit"},
+    {t:"总电费", k:"total_electricity"},
+    {t:"未结运费", k:"unsettled_freight"}
+  ];
+
+  var h = '';
+  h += '<div class="header"><h1>电车运营账目 - 年终结算</h1><div class="sub">更新于 ' + (d.update_time || '未知') + '</div></div>';
+
+  h += '<div class="cards">';
+  h += '<div class="card"><div class="lbl">总费用</div><div class="val">' + fmt(s.all_cars_total_expense) + '</div></div>';
+  h += '<div class="card green"><div class="lbl">总利润</div><div class="val">' + fmt(s.all_cars_total_profit) + '</div></div>';
+  h += '<div class="card orange"><div class="lbl">总电费</div><div class="val">' + fmt(s.all_cars_total_electricity) + '</div></div>';
+  h += '<div class="card red"><div class="lbl">未结运费</div><div class="val">' + fmt(s.all_cars_unsettled_freight) + '</div></div>';
+  h += '</div>';
+
+  for (var si = 0; si < sections.length; si++) {
+    var sec = sections[si];
+    var sd = d[sec.k] || {};
+    var tr = d.total_row && d.total_row[sec.k] || {};
+    h += '<div class="section"><h2>' + sec.t + '</h2><table><thead><tr><th>月份</th>';
+    for (var ci = 0; ci < cars.length; ci++) h += '<th>' + cars[ci] + '</th>';
+    h += '<th>合计</th></tr></thead><tbody>';
+
+    for (var mi = 0; mi < months.length; mi++) {
+      var row = sd[months[mi]];
+      if (!row) continue;
+      h += '<tr><td>' + months[mi] + '</td>';
+      for (var ci = 0; ci < cars.length; ci++) {
+        var v = row[cars[ci]] || 0;
+        h += '<td class="num' + (v === 0 ? ' zero' : '') + '">' + fmt(v) + '</td>';
+      }
+      h += '<td class="num total-col">' + fmt(row['合计'] || 0) + '</td></tr>';
+    }
+
+    h += '<tr class="total"><td>合计</td>';
+    for (var ci = 0; ci < cars.length; ci++) {
+      h += '<td class="num">' + fmt(tr[cars[ci]] || 0) + '</td>';
+    }
+    h += '<td class="num total-col">' + fmt(tr['合计'] || 0) + '</td></tr>';
+    h += '</tbody></table></div>';
+  }
+
+  document.getElementById('root').innerHTML = h;
+}
+init();
+</script>
+</body>
+</html>
